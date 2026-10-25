@@ -1,5 +1,9 @@
 // src/App.tsx
 import { useEffect, useState } from 'react';
+import { Navbar } from './components/layout/Navbar';
+import { BottomNav } from './components/layout/BottomNav';
+import { MovieCard } from './features/movies/components/MovieCard';
+import { MovieCardSkeleton } from './features/movies/components/MovieCardSkeleton';
 import { movieService } from './services/movieService';
 import type { Movie } from './types/tmdb';
 
@@ -10,7 +14,7 @@ export default function App() {
   useEffect(() => {
     movieService.getTrending()
       .then((data) => {
-        setMovies(data.results.slice(0, 5)); // فقط ۵ تای اول برای تست
+        setMovies(data.results);
         setLoading(false);
       })
       .catch((err) => {
@@ -20,26 +24,37 @@ export default function App() {
   }, []);
 
   return (
-    <main className="min-h-screen p-6 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold text-primary-base mb-6 purple-glow">
-        پروژه مای‌مووی (myMovie)
-      </h1>
+    <div className="min-h-screen pb-20 md:pb-8 flex flex-col bg-bg-base text-zinc-100">
+      {/* هدر بالایی */}
+      <Navbar />
 
-      {loading ? (
-        <p className="text-zinc-400">در حال دریافت فیلم‌ها از TMDB...</p>
-      ) : (
-        <div className="glass-panel p-6 rounded-2xl w-full max-w-md space-y-4">
-          <h2 className="text-xl font-semibold border-b border-white/10 pb-2">ترندهای امروز به فارسی:</h2>
-          <ul className="space-y-2">
-            {movies.map((m) => (
-              <li key={m.id} className="text-zinc-300 flex justify-between">
-                <span>{m.title || m.original_title}</span>
-                <span className="text-amber-400 font-mono">★ {m.vote_average.toFixed(1)}</span>
-              </li>
-            ))}
-          </ul>
+      {/* محتوای اصلی */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+            <span className="w-2.5 h-6 rounded-full bg-primary-base inline-block"></span>
+            داغ‌ترین فیلم‌های امروز
+          </h1>
         </div>
-      )}
-    </main>
+
+        {/* گرید واکنش‌گرا و موبایل‌فرست کارت‌ها */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          {loading
+            ? Array.from({ length: 10 }).map((_, i) => (
+                <MovieCardSkeleton key={i} />
+              ))
+            : movies.map((movie) => (
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onClick={() => console.log('Movie clicked:', movie.id)}
+                />
+              ))}
+        </div>
+      </main>
+
+      {/* منوی چسبان پایین موبایل */}
+      <BottomNav />
+    </div>
   );
 }
