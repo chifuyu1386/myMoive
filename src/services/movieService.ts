@@ -11,6 +11,10 @@ export const movieService = {
     return apiClient<TMDBResponse<Movie>>('/movie/popular', { page: page.toString() });
   },
 
+  getTopRated: () => {
+    return apiClient<TMDBResponse<Movie>>('/movie/top_rated');
+  },
+
   getGenres: () => {
     return apiClient<{ genres: Genre[] }>('/genre/movie/list');
   }
