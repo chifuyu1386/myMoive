@@ -12,6 +12,7 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { CastList } from '../features/movies/components/CastList';
 import { MovieRow } from '../features/movies/components/MovieRow';
 import { TrailerModal } from '../components/common/TrailerModal';
+import { useWatchlistStore } from '../store/useWatchlistStore';
 
 export const MovieDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +20,9 @@ export const MovieDetailsPage = () => {
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+
+  const { isInWatchlist, toggleWatchlist } = useWatchlistStore();
+  const isSaved = movie ? isInWatchlist(movie.id) : false;
 
   useEffect(() => {
     if (!id) return;
@@ -155,9 +159,13 @@ export const MovieDetailsPage = () => {
               </Button>
             )}
 
-            <Button variant="glass" size="md">
-              <Bookmark className="w-4 h-4 text-zinc-300" />
-              نشان کردن فیلم
+          <Button
+              variant={isSaved ? 'primary' : 'glass'}
+              size="md"
+              onClick={() => movie && toggleWatchlist(movie)}
+            >
+              <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-white' : 'text-zinc-300'}`} />
+              {isSaved ? 'نشان‌شده (حذف)' : 'نشان کردن فیلم'}
             </Button>
           </div>
 
