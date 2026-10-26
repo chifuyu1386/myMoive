@@ -24,3 +24,32 @@ export interface Genre{
 }
 
 export type ImageSize = 'w342' | 'w500' | 'w780' | 'original';
+
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+}
+
+export interface VideoItem {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}
+
+export interface MovieDetails extends Movie {
+  runtime: number;
+  tagline: string;
+  genres: Genre[];
+  credits?: {
+    cast: CastMember[];
+  };
+  videos?: {
+    results: VideoItem[];
+  };
+  recommendations?: TMDBResponse<Movie>;
+}

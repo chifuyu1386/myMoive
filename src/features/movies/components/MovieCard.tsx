@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import type { Movie } from '../../../types/tmdb';
 import { getTMDBImageUrl } from '../../../services/apiClient';
 import { Badge } from '../../../components/ui/Badge';
+import { useNavigate } from 'react-router-dom';
 
 interface MovieCardProps {
   movie: Movie;
@@ -16,9 +17,19 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
 
   const displayTitle = movie.title || movie.original_title;
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      navigate(`/movie/${movie.id}`);
+    }
+  };
+  
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
       className="group relative flex flex-col gap-2 cursor-pointer select-none transition-transform duration-300 active:scale-95"
     >
       <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl glass-card transition-all duration-300 group-hover:border-primary-base/50 group-hover:shadow-lg group-hover:shadow-primary-base/15">

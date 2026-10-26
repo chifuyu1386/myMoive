@@ -4,7 +4,7 @@ import type { Movie } from '../../../types/tmdb';
 import { getTMDBImageUrl } from '../../../services/apiClient';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
-
+import { useNavigate } from 'react-router-dom';
 
 interface HeroBannerProps {
   movie: Movie;
@@ -14,6 +14,15 @@ interface HeroBannerProps {
 export const HeroBanner: React.FC<HeroBannerProps> = ({ movie, onMoreInfo}) => {
   const displayTitle = movie.title || movie.original_title;
   const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : "";
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    if (onMoreInfo) {
+      onMoreInfo(movie.id);
+    } else {
+      navigate(`/movie/${movie.id}`);
+    }
+  };
 
   return (
     <div
@@ -53,7 +62,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movie, onMoreInfo}) => {
           <Button
             variant='primary'
             size='md'
-            onClick={() => onMoreInfo?.(movie.id)}
+            onClick={handleNavigate}
             className='font-semibold'
           >
             <Play className='w-4 h-4 fill-white'/>
@@ -62,7 +71,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movie, onMoreInfo}) => {
           <Button
             variant="glass"
             size="md"
-            onClick={() => onMoreInfo?.(movie.id)}
+            onClick={handleNavigate}
           >
             <Info className="w-4 h-4 text-zinc-300" />
             اطلاعات بیشتر

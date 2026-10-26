@@ -1,5 +1,5 @@
 import { apiClient } from "./apiClient";
-import type { Movie, TMDBResponse, Genre } from "../types/tmdb";
+import type { Movie, TMDBResponse, Genre, MovieDetails } from "../types/tmdb";
 import { TMDB_GENRES_MAP } from '../constants/genres';
 
 export const movieService = {
@@ -40,5 +40,23 @@ export const movieService = {
       sort_by: 'popularity.desc',
       page: page.toString()
     })
-  }
+  },
+
+  getMovieDetails: async (id: number) => {
+    const movieData = await apiClient<MovieDetails>(`/movie/${id}`, {
+      append_to_response: 'credits,videos,recommendations',
+    });
+
+    if (!movieData.videos?.results.length) {
+      try {
+        const fallbackVideos = await apiClient<{ results: any[] }>(`/movie/${id}/videos`, {
+          language: 'en-US',
+        });
+        movieData.videos = fallbackVideos;
+      } catch (err) {
+      }
+    }
+
+    return movieData;
+  },
 }
