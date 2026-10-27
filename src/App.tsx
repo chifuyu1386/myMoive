@@ -7,7 +7,7 @@ import { MovieDetailsPage } from './pages/MovieDetailsPage';
 
 export default function App() {
   return (
-    <BrowserRouter basename='/myMovie'>
+    <BrowserRouter basename='/myMoive'>
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomePage />} />
