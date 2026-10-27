@@ -7,7 +7,7 @@ import { MovieDetailsPage } from './pages/MovieDetailsPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/myMovie'>
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomePage />} />
